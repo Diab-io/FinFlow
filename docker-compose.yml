@@ -5,6 +5,9 @@ services:
     container_name: finflow-api
     ports:
       - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - ./app/migrations:/app/migrations
     depends_on:
       db:
         condition: service_healthy
