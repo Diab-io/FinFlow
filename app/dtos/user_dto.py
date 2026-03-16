@@ -1,10 +1,10 @@
-from pydantic import BaseModel, UUID4
+from pydantic import BaseModel, UUID4, EmailStr
 from app.enums import UserRole
 from typing import Optional
 
 
 class TokenRequest(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 
