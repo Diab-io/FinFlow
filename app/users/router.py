@@ -1,10 +1,14 @@
 from fastapi import APIRouter, Depends
-from app.dtos.user_dto import TokenRequest, TokenResponse, UserCreateRequest, UserResponse, UserUpdateRequest
+from app.dtos.user_dto import (
+    TokenRequest, TokenResponse, UserCreateRequest,
+    UserResponse, UserUpdateRequest, UpdateUserRoleRequest
+)
 from app.auth.dependencies import get_current_user, requires_admin
 from app.users.service import UsersService
 from app.users.models import Users
 from typing import Optional
 from app.users.dependencies import get_user_service
+from uuid import UUID
 
 router = APIRouter(prefix="/api/auth", tags=["Users"])
 
@@ -32,25 +36,34 @@ def get_users(
 
 @router.get("/users/{id}", response_model=UserResponse)
 def get_user(
-    id: str,
+    id: UUID,
     current_user: Users = Depends(get_current_user),
     user_service: UsersService = Depends(get_user_service)
     ):
     return user_service.get_user(id, current_user)
 
-@router.put("/users/{id}", response_model=UserResponse)
+@router.patch("/users/{id}", response_model=UserResponse)
 def update_user(
-    id: str,
+    id: UUID,
     payload: UserUpdateRequest,
     current_user: Users = Depends(requires_admin),
     user_service: UsersService = Depends(get_user_service)):
     
     return user_service.update_user(id, payload, current_user)
 
+@router.patch("/users/{id}/role", response_model=UserResponse)
+def update_user_role(
+    id: UUID,
+    payload: UpdateUserRoleRequest,
+    current_user: Users = Depends(requires_admin),
+    user_service: UsersService = Depends(get_user_service)
+):
+    return user_service.update_user_role(id, payload.role)
+
 #will be implemented with the AccountClosureService
 @router.post("/users/{id}/archive")
 def archive_user(
-    id: str,
+    id: UUID,
     current_user: Users = Depends(get_current_user),
     user_service: UsersService = Depends(get_user_service)):
     pass
