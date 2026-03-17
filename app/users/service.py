@@ -76,7 +76,7 @@ class UsersService:
         
         return self.user_repo.get(user_id)
 
-    def get_users(self, current_user: Users) -> list[Users]:
+    def get_users(self, current_user: Users, **filters) -> list[Users]:
         """Get a list of users
         """
         if not current_user.is_admin:
@@ -85,6 +85,6 @@ class UsersService:
                 detail="Not Allowed"
             )
         
-        return self.user_repo.list()
+        return self.user_repo.filter(**filters)
 
 
