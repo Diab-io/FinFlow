@@ -28,6 +28,6 @@ def verify_token(token: str) -> str | None:
         user_id = payload.get("sub")
         if user_id is None:
             return None
-        return int(user_id)
+        return user_id
     except jwt.PyJWTError:
         return None
