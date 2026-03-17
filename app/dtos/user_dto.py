@@ -8,24 +8,12 @@ class TokenRequest(BaseModel):
     password: str
 
 
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class UserRequest(BaseModel):
+class UserCreateRequest(BaseModel):
     username: str
     email: str
     password: str
     phone: Optional[str] = None
     role: Optional[str] = None
-
-
-class UserResponse(BaseModel):
-    id: UUID4
-    username: str
-    email: str
-    role: UserRole
 
 
 class UserUpdateRequest(BaseModel):
@@ -34,3 +22,14 @@ class UserUpdateRequest(BaseModel):
     phone: Optional[str] = None
 
 
+class UserResponse(BaseModel):
+    id: UUID4
+    username: str
+    email: str
+    role: UserRole
+    active: bool
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
