@@ -13,7 +13,7 @@ class UsersService:
     def register_user(self, payload: UserCreateRequest) -> Users:
         """Service for creating users and perisitence into the database
         """
-        user = self.user_repo.get_user(email=payload.email)
+        user = self.user_repo.get_user_by_email(email=payload.email)
         if user:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists")
         
@@ -26,7 +26,7 @@ class UsersService:
     def login_user(self, payload: TokenRequest) -> Users:
         """Generates a jwt access token
         """
-        user = self.user_repo.get_user(email=payload.email)
+        user = self.user_repo.get_user_by_email(email=payload.email)
 
         if not user or not verify_password(payload.password, user.password):
             raise HTTPException(
