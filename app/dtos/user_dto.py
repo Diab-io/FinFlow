@@ -17,6 +17,7 @@ class UserRequest(BaseModel):
     username: str
     email: str
     password: str
+    phone: Optional[str] = None
     role: Optional[str] = None
 
 
@@ -28,7 +29,8 @@ class UserResponse(BaseModel):
 
 
 class UserUpdateRequest(BaseModel):
-    email: str
-    username: str
+    email: Optional[str] = None
+    username: Optional[str] = None
+    phone: Optional[str] = None
 
 
