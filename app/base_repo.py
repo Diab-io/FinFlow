@@ -24,7 +24,7 @@ class BaseRepository(Generic[ModelType]):
         self.db.refresh(obj)
         return obj
     
-    def update(self, obj: ModelType, data: dict) -> None:
+    def update(self, obj: ModelType, data: dict) -> ModelType:
         for field, value in data.items():
             setattr(obj, field, value)
         
