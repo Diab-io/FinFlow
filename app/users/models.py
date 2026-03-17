@@ -18,3 +18,15 @@ class Users(Base):
     active: Mapped[bool] = mapped_column(default=True)
     created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[Optional[datetime]] = mapped_column(onupdate=datetime.now(timezone.utc))
+
+    @property
+    def is_admin(self) -> bool:
+        return self.role == UserRole.ADMIN
+    
+    @property
+    def is_customer(self) -> bool:
+        return self.role == UserRole.CUSTOMER
+    
+    @property
+    def is_merchant(self) -> bool:
+        return self.role == UserRole.MERCHANT
