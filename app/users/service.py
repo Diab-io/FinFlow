@@ -4,6 +4,7 @@ from app.users.repository import UsersRepository
 from app.users.models import Users
 from app.auth.security import hash_password, create_access_token, verify_password
 from app.dtos.user_dto import UserCreateRequest, TokenRequest, UserUpdateRequest
+from uuid import UUID
 
 class UsersService:
     def __init__(self, db: Session):
@@ -38,7 +39,7 @@ class UsersService:
         access_token = create_access_token(payload={"sub": str(user.id)})
         return {"access_token": access_token, "token_type": "bearer"}
 
-    def update_user(self, user_id: int, data: UserUpdateRequest, current_user: Users) -> Users:
+    def update_user(self, user_id: UUID, data: UserUpdateRequest, current_user: Users) -> Users:
         """Updates a user object with the passed payload
         """
         payload = data.model_dump(exclude_unset=True)
@@ -65,13 +66,13 @@ class UsersService:
         
         return self.user_repo.update(user, payload)
 
-    def get_user(self, user_id, current_user: Users) -> Users:
+    def get_user(self, user_id: UUID, current_user: Users) -> Users:
         """Get a single user from the id
         """
         if user_id != current_user.id and not current_user.is_admin:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Only admins can archive other user records"
+                detail="Only admins can retrieve other user records"
             ) 
         
         return self.user_repo.get(user_id)
@@ -86,5 +87,13 @@ class UsersService:
             )
         
         return self.user_repo.filter(**filters)
+    
+    def update_user_role(self, user_id: UUID, role: str) -> Users:
+        user = self.user_repo.get(user_id)
+
+        if not user:
+            raise HTTPException(404, "User not found")
+
+        return self.user_repo.update(user, {"role": role})
 
 
