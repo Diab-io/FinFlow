@@ -35,8 +35,8 @@ class UsersService:
                 headers={"WWW-Authenticate": "Bearer"}
             )
         
-        access_token = create_access_token(payload={"sub": str(user.id), "token_type": "access"})
-        return access_token
+        access_token = create_access_token(payload={"sub": str(user.id)})
+        return {"access_token": access_token, "token_type": "bearer"}
 
     def update_user(self, user_id: int, data: UserUpdateRequest, current_user: Users) -> Users:
         """Updates a user object with the passed payload
