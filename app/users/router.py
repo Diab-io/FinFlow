@@ -24,7 +24,7 @@ def register(
 
 @router.get("/users", response_model=list[UserResponse])
 def get_users(
-    active: Optional[bool] = None,
+    active: Optional[bool] = True,
     current_user: Users = Depends(requires_admin),
     user_service: UsersService = Depends(get_user_service)
     ):
@@ -32,7 +32,7 @@ def get_users(
 
 @router.get("/users/{id}", response_model=UserResponse)
 def get_user(
-    id: int,
+    id: str,
     current_user: Users = Depends(get_current_user),
     user_service: UsersService = Depends(get_user_service)
     ):
@@ -40,7 +40,7 @@ def get_user(
 
 @router.put("/users/{id}", response_model=UserResponse)
 def update_user(
-    id: int,
+    id: str,
     payload: UserUpdateRequest,
     current_user: Users = Depends(requires_admin),
     user_service: UsersService = Depends(get_user_service)):
@@ -50,7 +50,7 @@ def update_user(
 #will be implemented with the AccountClosureService
 @router.post("/users/{id}/archive")
 def archive_user(
-    id: int,
+    id: str,
     current_user: Users = Depends(get_current_user),
     user_service: UsersService = Depends(get_user_service)):
     pass
