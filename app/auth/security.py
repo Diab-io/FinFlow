@@ -11,7 +11,7 @@ def hash_password(password: str) -> str:
     hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     return hash.decode('utf-8')
 
-def verify_password(password: str, hash_password: str) -> str:
+def verify_password(password: str, hash_password: str) -> bool:
     return bcrypt.checkpw(password.encode('utf-8'), hash_password.encode('utf-8'))
 
 def create_access_token(payload: dict) -> str:
