@@ -19,11 +19,14 @@ class BaseRepository(Generic[ModelType]):
         stmt = select(self.model)
         return self.db.execute(stmt).scalars().all()
     
-    def create(self, data: dict) -> ModelType:
+    def create(self, data: dict, commit: bool = True):
         obj = self.model(**data)
         self.db.add(obj)
-        self.db.commit()
-        self.db.refresh(obj)
+        if commit:
+            self.db.commit()
+            self.db.refresh(obj)
+        else:
+            self.db.flush()
         return obj
     
     def update(self, obj: ModelType, data: dict) -> ModelType:
