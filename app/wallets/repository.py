@@ -23,24 +23,30 @@ class WalletRepository(BaseRepository[Wallets]):
 
     def get_wallet_balance(self, wallet_id: UUID):
         credits = self.db.execute(
-            func.coalesce(
-                func.sum(
-                    select(Transactions).where(
-                        and_(Transactions.wallet_id == wallet_id, Transactions.type == TransactionTypeEnum.CREDIT)
-                    )
-                ), 0
+            select(
+                func.coalesce(
+                    func.sum(Transactions.amount), 0
+                )
+            ).where(
+                and_(
+                    Transactions.wallet_id == wallet_id,
+                    Transactions.type == TransactionTypeEnum.CREDIT
+                )
             )
-        )
+        ).scalar()
 
         debits = self.db.execute(
-            func.coalesce(
-                func.sum(
-                    select(Transactions).where(
-                        and_(Transactions.wallet_id == wallet_id, Transactions.type == TransactionTypeEnum.DEBIT)
-                    )
-                ), 0
+            select(
+                func.coalesce(
+                    func.sum(Transactions.amount), 0
+                )
+            ).where(
+                and_(
+                    Transactions.wallet_id == wallet_id,
+                    Transactions.type == TransactionTypeEnum.DEBIT
+                )
             )
-        )
+        ).scalar()
 
         balance = credits - debits
         return balance
