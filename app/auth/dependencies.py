@@ -2,7 +2,7 @@ from app.auth.oauth2 import oauth2_scheme
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.auth.security import verify_token
-from app.database import get_db
+from app.core.database import get_db
 from app.users.models import Users
 from app.users.repository import UsersRepository
 

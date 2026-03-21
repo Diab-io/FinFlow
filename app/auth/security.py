@@ -1,7 +1,7 @@
 import bcrypt
 import jwt
 from datetime import datetime, timezone, timedelta
-from app.config import jwt_settings
+from app.core.config import jwt_settings
 
 SECRET_KEY = jwt_settings.SECRET_KEY
 ACCESS_TOKEN_EXPIRE_MINUTES = jwt_settings.ACCESS_TOKEN_EXPIRE_MINUTES
