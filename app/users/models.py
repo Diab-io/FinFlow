@@ -1,9 +1,9 @@
-from app.database import Base
+from app.core.database import Base
 from sqlalchemy.orm import mapped_column, Mapped
 from uuid import UUID, uuid4
 from datetime import datetime, timezone
 from typing import Optional
-from app.enums import UserRole
+from app.core.enums import UserRole
 
 
 class Users(Base):
