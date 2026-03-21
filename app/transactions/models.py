@@ -1,11 +1,11 @@
-from app.database import Base
-from app.enums import TransactionTypeEnum
+from app.core.database import Base
+from app.core.enums import TransactionTypeEnum
 from sqlalchemy import ForeignKey, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid import uuid4, UUID
 from decimal import Decimal
 from typing import Optional
-from datetime import datetime, timezone
+from datetime import datetime, timezone 
 
 
 class Transactions(Base):
