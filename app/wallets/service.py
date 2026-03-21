@@ -1,5 +1,6 @@
 import random
-from fastapi import HTTPException, status
+from math import ceil
+from fastapi import HTTPException, status, Request
 from typing import Dict, Any
 from uuid import UUID
 from app.core.enums import CurrencyEnum
@@ -53,7 +54,33 @@ class WalletService:
         wallet = self.wallet_repo.create(wallet_data, commit=commit)
         return wallet.id
     
-    def get_wallet_transactions(self, current_user: Users):
+    def get_wallet_transactions(self, current_user: Users, page: int, limit: int, request: Request):
         user_wallet = self.get_user_wallet(current_user)
-        transactions = self.wallet_repo.get_wallet_transactions(user_wallet.id)
-        return {"transactions": transactions}
+        offset = (page - 1) * limit
+
+        total_items = self.wallet_repo.get_total_wallet_transaction_count(user_wallet.id)
+
+        total_pages = ceil(total_items / limit) if total_items else 1
+
+        items = self.wallet_repo.get_wallet_transactions(user_wallet.id, limit=limit, offset=offset)
+
+        def build_url(p: int):
+            return str(request.url.include_query_params(page=p, limit=limit))
+        
+        links = {
+            "self": build_url(page),
+            "first": build_url(1),
+            "next": build_url(page + 1) if page < total_pages else None,
+            "prev": build_url(page - 1) if page > 1 else None
+        }
+
+        return {
+            "data": items,
+            "meta": {
+                "page": page,
+                "limit": limit,
+                "total_items": total_items,
+                "total_pages": total_pages
+            },
+            "links": links
+        }

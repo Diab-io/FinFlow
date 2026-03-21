@@ -53,7 +53,17 @@ class WalletRepository(BaseRepository[Wallets]):
         balance = credits - debits
         return balance
     
-    def get_wallet_transactions(self, wallet_id: UUID):
-        query = select(Transactions).where(Transactions.wallet_id == wallet_id)
+    def get_wallet_transactions(self, wallet_id: UUID, limit: int, offset: int):
+        query = (
+            select(Transactions)
+                .where(Transactions.wallet_id == wallet_id)
+                .order_by(Transactions.created_at.desc())
+                .offset(offset)
+                .limit(limit)
+        )
         transactions = self.db.execute(query).all()
         return transactions
+
+    def get_total_wallet_transaction_count(self, wallet_id: UUID):
+        query = select(Transactions).where(Transactions.wallet_id == wallet_id)
+        return self.db.scalar(query)
