@@ -1,7 +1,7 @@
-from app.base_repo import BaseRepository
+from app.core.base_repo import BaseRepository
 from app.wallets.models import Wallets
 from app.transactions.models import Transactions
-from app.enums import TransactionTypeEnum
+from app.core.enums import TransactionTypeEnum
 from uuid import UUID
 from sqlalchemy import select, case, func, and_
 from sqlalchemy.orm import Session
@@ -22,6 +22,8 @@ class WalletRepository(BaseRepository[Wallets]):
         return wallet
 
     def get_wallet_balance(self, wallet_id: UUID):
+        # TODO: combine into single query using CASE expressions
+        # to reduce database round trips from 2 to 1
         credits = self.db.execute(
             select(
                 func.coalesce(
