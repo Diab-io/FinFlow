@@ -1,5 +1,5 @@
-from app.database import Base
-from app.enums import CurrencyEnum
+from app.core.database import Base
+from app.core.enums import CurrencyEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, String
 from uuid import uuid4, UUID
