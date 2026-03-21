@@ -1,6 +1,8 @@
 from fastapi import status, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from app.users.repository import UsersRepository
+from app.wallets.service import WalletService
 from app.users.models import Users
 from app.auth.security import hash_password, create_access_token, verify_password
 from app.dtos.user_dto import UserCreateRequest, TokenRequest, UserUpdateRequest
@@ -10,6 +12,7 @@ class UsersService:
     def __init__(self, db: Session):
         self.db = db
         self.user_repo = UsersRepository(db)
+        self.wallet_service = WalletService(db)
     
     def register_user(self, payload: UserCreateRequest) -> Users:
         """Service for creating users and perisitence into the database
@@ -18,10 +21,29 @@ class UsersService:
         if user:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists")
         
+        username_user = self.user_repo.get_user_by_username(payload.username)
+        if username_user:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Username already taken"
+            )
+        
         create_data = payload.model_dump(exclude_unset=True)
         create_data['password'] = hash_password(payload.password)
+        currency = create_data.pop('currency', None)
 
-        return self.user_repo.create(create_data)
+        try:
+            user = self.user_repo.create(create_data, commit=False)
+            self.wallet_service.create_user_wallet(current_user=user, currency=currency, commit=False)
+            self.user_repo.db.commit()
+        except IntegrityError as e:
+            self.db.rollback()
+
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                deail="Email or username already exists"
+            )
+        return user
 
 
     def login_user(self, payload: TokenRequest) -> Users:
