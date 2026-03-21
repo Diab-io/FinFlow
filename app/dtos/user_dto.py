@@ -1,5 +1,5 @@
 from pydantic import BaseModel, UUID4, EmailStr
-from app.enums import UserRole
+from app.core.enums import UserRole, CurrencyEnum
 from typing import Optional
 
 
@@ -14,6 +14,7 @@ class UserCreateRequest(BaseModel):
     password: str
     phone: Optional[str] = None
     role: Optional[str] = None
+    currency: Optional[CurrencyEnum] = None
 
 
 class UserUpdateRequest(BaseModel):
