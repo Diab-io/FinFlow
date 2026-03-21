@@ -2,7 +2,7 @@ import random
 from fastapi import HTTPException, status
 from typing import Dict, Any
 from uuid import UUID
-from app.enums import CurrencyEnum
+from app.core.enums import CurrencyEnum
 from app.users.models import Users
 from app.wallets.models import Wallets
 from app.wallets.repository import WalletRepository
@@ -33,10 +33,10 @@ class WalletService:
     def get_wallet_balance(self, current_user: Users) -> Dict[str, Any]:
         user_wallet = self.get_user_wallet(current_user)
         balance = self.wallet_repo.get_wallet_balance(user_wallet.id)
-        return {"id": current_user.id, "balance": balance}
+        return {"id": current_user.id, "balance": balance, "currency": user_wallet.currency}
 
-    def create_user_wallet(self, current_user: Users, currency: CurrencyEnum = None) -> UUID:
-        user_wallet = self.get_user_wallet(current_user)
+    def create_user_wallet(self, current_user: Users, currency: CurrencyEnum = None, commit: bool = True) -> UUID:
+        user_wallet = self.wallet_repo.get_wallet_by_user_id(current_user.id)
         if user_wallet:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
@@ -50,9 +50,10 @@ class WalletService:
         if currency:
             wallet_data['currency'] = currency
         
-        wallet = self.wallet_repo.create(wallet_data)
+        wallet = self.wallet_repo.create(wallet_data, commit=commit)
         return wallet.id
     
     def get_wallet_transactions(self, current_user: Users):
         user_wallet = self.get_user_wallet(current_user)
-        return self.wallet_repo.get_wallet_transactions(user_wallet.id)
+        transactions = self.wallet_repo.get_wallet_transactions(user_wallet.id)
+        return {"transactions": transactions}
