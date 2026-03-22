@@ -10,7 +10,7 @@ class TokenRequest(BaseModel):
 
 class UserCreateRequest(BaseModel):
     username: str
-    email: str
+    email: EmailStr
     password: str
     phone: Optional[str] = None
     role: Optional[str] = None
@@ -18,7 +18,7 @@ class UserCreateRequest(BaseModel):
 
 
 class UserUpdateRequest(BaseModel):
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     username: Optional[str] = None
     phone: Optional[str] = None
 
@@ -26,7 +26,7 @@ class UserUpdateRequest(BaseModel):
 class UserResponse(BaseModel):
     id: UUID4
     username: str
-    email: str
+    email: EmailStr
     role: UserRole
     active: bool
 
