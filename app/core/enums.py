@@ -17,3 +17,7 @@ class TransactionTypeEnum(str, Enum):
     CREDIT = "CREDIT"
     DEBIT = "DEBIT"
 
+class PaymentStatus(str, Enum):
+    PENDING = "PENDING"
+    SUCCESS = "SUCCESS"
+    FAILED = "FAILED"
