@@ -29,7 +29,13 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=BASE_DIR / ".env", env_file_encoding="utf-8" , extra="ignore")
 
 
+class RedisSettings(BaseSettings):
+    HOST: str
+    PORT: str
+    model_config = SettingsConfigDict(env_prefix="REDIS_", env_file=BASE_DIR / ".env" , extra="ignore")
+
 settings = Settings()
 postgres_settings = PostgresSettings()
 jwt_settings = JWTSettings()
 celery_settings = CelerySettings()
+redis_settings = RedisSettings()
