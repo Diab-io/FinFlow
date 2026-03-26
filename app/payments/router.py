@@ -27,7 +27,6 @@ async def process_webhook(
     body_str = raw_body.decode("utf-8")
 
     try:
-        print(raw_body, type(raw_body))
         data = WebhookPayloadDTO.model_validate(json.loads(raw_body.decode("utf-8")))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail="Invalid payload")
