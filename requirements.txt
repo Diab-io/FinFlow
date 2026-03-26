@@ -6,7 +6,6 @@ anyio==4.12.1
 async-timeout==5.0.1
 bcrypt==5.0.0
 billiard==4.2.4
-celery==5.6.2
 certifi==2026.2.25
 charset-normalizer==3.4.6
 click==8.3.1
