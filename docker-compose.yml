@@ -1,13 +1,13 @@
-version: '3.8'
 services:
   api:
     build: .
     container_name: finflow-api
     ports:
       - "8000:8000"
+      - "9000:9000"
     volumes:
       - ./app:/app/app
-      - ./app/migrations:/app/migrations
+      - ./mock_gateway:/app/mock_gateway
     depends_on:
       db:
         condition: service_healthy
@@ -19,7 +19,7 @@ services:
   
   celery_worker:
     build: .
-    command: celery -A celery_app worker --loglevel=info
+    command: celery -A app.celery_app worker --loglevel=info
     env_file:
       - .env
     depends_on:
