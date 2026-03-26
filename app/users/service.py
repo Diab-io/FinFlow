@@ -37,11 +37,11 @@ class UsersService:
             self.wallet_service.create_user_wallet(current_user=user, currency=currency, commit=False)
             self.user_repo.db.commit()
         except IntegrityError as e:
-            self.db.rollback()
+            self.user_repo.db.rollback()
 
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                deail="Email or username already exists"
+                detail="Email or username already exists"
             )
         return user
 
