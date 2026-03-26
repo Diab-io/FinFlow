@@ -1,24 +1,26 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from decimal import Decimal
 from uuid import UUID
 from app.core.enums import PaymentStatus
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from datetime import datetime
 
 
 class PaymentRequestDTO(BaseModel):
-    amount: Decimal
+    amount: Decimal = Field(ge=1)
 
 class PaymentResponseDTO(BaseModel):
     id: UUID
     amount: Decimal
     status: PaymentStatus
     reference: str
-    payment_response: Dict[str, Any]
+    payment_response: Optional[Dict[str, Any]] = None
     created_at: datetime
 
 class WebhookPayloadDTO(BaseModel):
-    event: str
     status: str
     reference: str
-    reason: str
+    reason: Optional[str] = None
+
+class WebhookResponseDTO(BaseModel):
+    status: str
