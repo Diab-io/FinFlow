@@ -17,15 +17,15 @@ services:
     env_file:
       - .env
   
-  celery_worker:
-    build: .
-    command: celery -A app.celery_app worker --loglevel=info
-    env_file:
-      - .env
-    depends_on:
-      redis:
-        condition: service_healthy
-    restart: unless-stopped
+  # celery_worker:
+  #   build: .
+  #   command: celery -A app.celery_app worker --loglevel=info
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #   restart: unless-stopped
   
   db:
     image: postgres:17
