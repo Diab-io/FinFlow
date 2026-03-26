@@ -3,6 +3,7 @@ from app.transactions.repository import TransactionRepository
 from app.wallets.repository import WalletRepository
 from app.users.models import Users
 from app.core.enums import TransactionTypeEnum
+from app.core.redis import redis_client
 from fastapi import HTTPException, status
 from uuid import uuid4
 
@@ -22,7 +23,9 @@ class TransferService:
         
         return {"transactions": transfer}
     
-    def create_transfer(self, current_user: Users, payload: dict):
+    def create_transfer(self, current_user: Users, payload: dict, idempotency_key: str):
+        if response := redis_client.hgetall(f"idempotency:{idempotency_key}"):
+            return response
         account_number = payload.get('account_number')
         amount = payload.get("amount")
         description = payload.get("description")
@@ -82,11 +85,9 @@ class TransferService:
             "type": TransactionTypeEnum.CREDIT
         }
 
-        print(base_trxn_data)
         debit_trxn_data = {**base_trxn_data, **debit_data}
         credit_trxn_data = {**base_trxn_data, **credit_data}
 
-        print(debit_trxn_data)
 
         self.transaction_repo.create(debit_trxn_data, commit=False)
         self.transaction_repo.create(credit_trxn_data, commit=False)
@@ -96,14 +97,19 @@ class TransferService:
         data = {
             "reference": transaction_reference,
             "account_number": account_number,
-            "amount": amount,
+            "amount": float(amount),
             "status": "completed",
             "currency": sender_wallet.currency
         }
 
         if description:
             data["description"] = description
-
+        
+        key = f"idempotency:{idempotency_key}"
+        pipe = redis_client.pipeline(transaction=True)
+        pipe.hset(key, mapping=data)
+        pipe.expire(key, 24*60*60)
+        pipe.execute()
 
         return data
 

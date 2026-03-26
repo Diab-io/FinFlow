@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
 from app.dtos.transfer_dto import (
     TransferRequestDTO, TransferResponseDTO, TransferReferenceResponseDTO
 )
@@ -13,9 +13,10 @@ router = APIRouter(prefix="/api/transfers", tags=["Transfers"])
 def create_transfer(
         payload: TransferRequestDTO,
         current_user: Users = Depends(get_current_user),
-        transfer_service: TransferService = Depends(get_transfer_service)
+        transfer_service: TransferService = Depends(get_transfer_service),
+        x_idempotency_key: str = Header(...)
     ):
-    return transfer_service.create_transfer(current_user, payload.model_dump())
+    return transfer_service.create_transfer(current_user, payload.model_dump(), x_idempotency_key)
 
 @router.get('/{reference}', response_model=TransferReferenceResponseDTO)
 def get_by_reference(
