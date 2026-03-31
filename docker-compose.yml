@@ -8,6 +8,7 @@ services:
     volumes:
       - ./app:/app/app
       - ./mock_gateway:/app/mock_gateway
+      - ./tests:/app/tests
     depends_on:
       db:
         condition: service_healthy

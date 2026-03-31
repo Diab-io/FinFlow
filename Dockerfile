@@ -11,6 +11,8 @@ COPY ./app /app/app
 # mock gateway goes inside /app
 COPY ./mock_gateway /app/mock_gateway
 
+COPY ./tests /app/tests
+
 EXPOSE 8000 9000
 
 CMD sh -c "\
