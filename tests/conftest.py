@@ -30,3 +30,14 @@ def client(db):
     app.dependency_overrides[get_db] = get_override_db
     yield TestClient(app)
     app.dependency_overrides.clear()
+
+@pytest.fixture
+def register_user(client):
+    payload = {
+        "username": "john.doe",
+        "email": "test@example.com",
+        "password": "example"
+    }
+
+    client.post('/api/auth/register', json=payload)
+    return payload
