@@ -41,3 +41,8 @@ def register_user(client):
 
     client.post('/api/auth/register', json=payload)
     return payload
+
+@pytest.fixture
+def token(client, register_user):
+    resp = client.post('/api/auth/token', json=register_user)
+    return resp.json()["access_token"]
