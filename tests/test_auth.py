@@ -1,5 +1,5 @@
 import uuid
-from .conftest import client, register_user
+from .conftest import client, register_user, token
 
 def test_register_user(client):
     payload = {
@@ -78,7 +78,8 @@ def test_wrong_password(client, register_user):
 def test_user_not_found(client, register_user):
     resp = client.post('/api/auth/token', json={
         "email": f"test_{uuid.uuid4()}@example.com",
-        "password": "example"
+        "password": register_user["password"]
     })
     assert resp.status_code == 401
     assert resp.json()["detail"] == "Incorrect username or password"
+
