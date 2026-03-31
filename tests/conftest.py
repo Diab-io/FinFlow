@@ -16,7 +16,7 @@ TestSession = sessionmaker(bind=engine)
 @pytest.fixture
 def db():
     Base.metadata.create_all(bind=engine)
-    session = TestSession
+    session = TestSession()
     yield session
     session.close()
     Base.metadata.drop_all(engine)
