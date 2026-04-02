@@ -143,6 +143,8 @@ FinFlow/
 
 **Role-Based Access Control** — Three roles (customer, merchant, admin) with endpoint-level enforcement via FastAPI dependencies. Admin-only endpoints use a `requires_admin` dependency that checks the user's role before the handler runs.
 
+**CI/CD pipeline** — GitHub Actions workflow to run tests and linting on every push.
+
 ## API Endpoints
 
 ### Auth
@@ -304,7 +306,6 @@ POST /api/transfers/  →  Idempotency key checked in Redis
 - **Rate limiting** — Add Redis-backed rate limiting middleware on auth and transfer endpoints.
 - **Account closure workflow** — Implement a multi-step account closure process with balance verification and final settlement.
 - **Merchant API keys** — Add API key authentication for merchants to accept payments programmatically, with per-key rate limiting and usage analytics.
-- **CI/CD pipeline** — GitHub Actions workflow to run tests and linting on every push.
 - **Database read replicas** — Route reporting and history queries to read replicas to reduce load on the primary database.
 
 ## License
