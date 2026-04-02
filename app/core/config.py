@@ -17,12 +17,6 @@ class JWTSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="JWT_", env_file=BASE_DIR / ".env" , extra="ignore")
 
 
-class CelerySettings(BaseSettings):
-    BROKER_URL: str
-    RESULT_BACKEND: str
-    model_config = SettingsConfigDict(env_prefix="CELERY_", env_file=BASE_DIR / ".env" , extra="ignore")
-
-
 class Settings(BaseSettings):
     DATABASE_URL: str
     WEBHOOK_KEY: str
@@ -37,5 +31,4 @@ class RedisSettings(BaseSettings):
 settings = Settings()
 postgres_settings = PostgresSettings()
 jwt_settings = JWTSettings()
-celery_settings = CelerySettings()
 redis_settings = RedisSettings()
