@@ -1,3 +1,4 @@
+![CI](https://github.com/Diab-io/FinFlow/actions/workflows/ci.yml/badge.svg)
 # FinFlow — Digital Wallet & Payment Processing API
 
 A fintech backend API where users can create wallets, fund them through a payment gateway, and transfer money peer-to-peer. Every transaction uses double-entry bookkeeping for full auditability, transfers are protected by idempotency keys to prevent duplicate charges, and the system handles asynchronous payment webhooks with HMAC signature verification.
