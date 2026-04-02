@@ -61,7 +61,7 @@ class WalletRepository(BaseRepository[Wallets]):
                 .offset(offset)
                 .limit(limit)
         )
-        transactions = self.db.execute(query).all()
+        transactions = self.db.execute(query).scalars().all()
         return transactions
 
     def get_total_wallet_transaction_count(self, wallet_id: UUID):
