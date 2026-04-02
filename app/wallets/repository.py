@@ -65,5 +65,5 @@ class WalletRepository(BaseRepository[Wallets]):
         return transactions
 
     def get_total_wallet_transaction_count(self, wallet_id: UUID):
-        query = select(Transactions).where(Transactions.wallet_id == wallet_id)
+        query = select(func.count()).select_from(Transactions).where(Transactions.wallet_id == wallet_id)
         return self.db.scalar(query)
