@@ -16,6 +16,7 @@ COPY ./tests /app/tests
 EXPOSE 8000 9000
 
 CMD sh -c "\
+alembic upgrade head && \
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload & \
 cd /app/mock_gateway && uvicorn main:app --host 0.0.0.0 --port 9000 --reload & \
 wait"
